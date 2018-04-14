@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+		<script type="text/javascript">
+			var socket = null;
+			var isopen = false;
+			
+			function startWebsocket(){
+					socket = new WebSocket($('#uri').val());
+					socket.binaryType = "arraybuffer";
+					socket.onopen = function () {
+							console.log("Connected!");
+							isopen = true;
+							
+							
+							socket.send(JSON.stringify({
+								action: 'subscribe',
+								'#':'',
+								data:'modem22'
+							}));
+								
+					}
+					socket.onmessage = function (e) {
+							if (typeof e.data == "string") {
+									console.log("Text message received: " + e.data);
+									
+									
+									var msg = JSON.parse(e.data);
+									
+									
+									if(msg.action == 'msg')
+									{
+										$('#outarea').append(msg.data);
+									}
+									
+									
+									
+									
+									
+							} else {
+									var arr = new Uint8Array(e.data);
+									var hex = '';
+									for (var i = 0; i < arr.length; i++) {
+											hex += ('00' + arr[i].toString(16)).substr(-2);
+									}
+									console.log("Binary message received: " + hex);
+							}
+					}
+					socket.onclose = function (e) {
+							console.log("Connection closed.");
+							socket = null;
+							isopen = false;
+					}
+			}
+			
+
+			
+			function sendText() {
+					if (isopen) {
+							socket.send(
+									JSON.stringify({
+											action: $('#action').val(),
+											'#': $('#channel').val(),
+											data: $('#data').val()})
+									);
+
+							console.log("Text message sent.");
+					} else {
+							console.log("Connection not opened.")
+					}
+			}
+			;
+			function sendBinary() {
+					if (isopen) {
+							var buf = new ArrayBuffer(32);
+							var arr = new Uint8Array(buf);
+							for (i = 0; i < arr.length; ++i)
+						arr[i] = i;
+							socket.send(buf);
+							console.log("Binary message sent.");
+					} else {
+							console.log("Connection not opened.")
+					}
+			};
+		</script>
+	</head>
+	<body>
+		<p>Open your browser's JavaScript console to see what's happening (hit F12).</p>
+		Uri: <input id="uri" value="wss://192.168.1.120:9000/demo" onkeypress="if (event.keyCode == 13)startWebsocket()"> 
+		<button onclick="startWebsocket()">Connect</button>
+		Action: <input id="action" value="msg">
+		Channel: <input id="channel" value="modem22">
+		Data: <input id="data" value="test">
+
+		<button onclick='sendText();'>Send Text Message</button>
+		<button onclick='sendBinary();'>Send Binary Message</button>
+		<pre id="outarea" style="border:1px solid silver;width:100%;height:50%"></pre>
+	</body>
+
+</html>

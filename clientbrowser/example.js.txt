@@ -1,0 +1,40 @@
+
+some info about websocket communication
+http://www.abrandao.com/2013/06/websockets-html5-php/
+
+
+
+socket = new WebSocket("wss://host:port/app");
+
+socket.onopen = function () {						
+	socket.send(JSON.stringify({
+		action: 'subscribe',
+		data:'channelid'
+	}));
+}
+
+socket.onclose = function (e) {
+		console.log("Connection closed.");
+		socket = null;
+}
+
+socket.onmessage = function (e) {
+
+	console.log("Text message received: " + e.data);
+	var msg = JSON.parse(e.data);
+	//..implementation
+}
+
+fuction sendMessage(action, channel, data)
+{
+	if(!socket){
+		console.log('Not connected');
+		return false;
+	}
+
+	socket.send( JSON.stringify( { action: action, '#': channel,data: data } s) );
+}
+
+
+//alternatives
+//https://github.com/Flynsarmy/PHPWebSocket-Chat/blob/master/class.PHPWebSocket.php

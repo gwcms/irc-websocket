@@ -1,0 +1,109 @@
+.testpannel td{
+	padding: 2px;
+}
+.testpannel th{
+	text-align: right;
+	padding-right: 10px;
+}		
+.connected, .form, .tabs, .authorised{
+	display:none;
+}
+
+
+.container
+{
+    height: 100%;
+}
+.container
+{
+    display: flex;
+    flex-direction: column;
+}
+.chattop{}
+.chatbottom
+{
+    flex:1;
+    overflow-y: auto;
+}	
+
+
+body { background-color: #fbfaf7}
+
+#messagecontentC{
+	width: 100%;
+	height: calc(100%-30px);
+}
+
+#messagecontent{
+	height: 100%;
+	width: 100%;	
+	overflow-y: auto;
+	padding: 5px;
+	background-color: white;
+	vertical-align: top;
+}
+#chatcontainer{
+	height: calc(100% - 60px);
+}
+
+#userscontent{
+	vertical-align: top;
+}
+
+.channels{
+
+	vertical-align: top;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    background-color: #fff;
+    color: #333;
+}
+
+.nav-pills > li > a {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.nav > li > a {
+    padding: 5px 15px;
+}
+
+.outmsg{
+	color: silver;
+}
+.inmsg{
+	color: brown;
+}
+
+.msgtime{
+	margin-right:5px;
+	color: silver;
+}
+
+.msgact{
+	margin-right:5px;
+	color: orange;
+	text-style: italic;
+}
+.msgdetails{
+	font-size: 10px;
+	color:silver;
+	font-style: italic;
+}
+.msguser{
+	margin-right:5px;
+	color: violet;
+}
+#roomInput{
+	width: calc(100% - 100px);
+}
+
+.userme{
+	color: brown;
+}
+
+.messagesDrop { width: 100%; }
+
+.roomTrA{
+	white-space: nowrap;
+}

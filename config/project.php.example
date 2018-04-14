@@ -1,0 +1,31 @@
+<?php
+
+//copy this file and name it project.php
+//if you have certificate files load them
+//i used letsencrypt for easy cert creation
+//apt install letsencrypt && letsencrypt certonly --standalone -d yourdomain.com
+
+
+GW::s('DB/UPHD', 'user:password@mysqlserverhost/databasename');
+GW::s('WSS/PORT', 9001);
+
+GW::s('WSS/HOSTNAME', $hostname="yourdomain.com");
+
+if(file_exists("/etc/letsencrypt/live/$hostname/cert.pem"))
+{
+
+	GW::s('WSS/SSL_OPT',[
+		'local_cert'=>"/etc/letsencrypt/live/$hostname/cert.pem",
+		'local_pk'=>"/etc/letsencrypt/live/$hostname/privkey.pem",
+		'cafile'=>"/etc/letsencrypt/live/$hostname/chain.pem",
+
+		//'passphrase'=>'gw_wss',
+		'allow_self_signed'=>true,
+		'verify_peer'=>false
+		]
+	); 		
+	GW::s('WSS/SSL_OPT/ENABLED', true);
+}else{
+	GW::s('WSS/SSL_OPT/ENABLED', false);
+}
+
