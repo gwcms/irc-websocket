@@ -3,6 +3,7 @@
 //if you would like get realtime updates email me vidmantas.norkus@gw.lt your http://project.com/pullupdates.php link
 
 //switch to deploy user is needed - sudo is used
+//
 //add to /etc/sudoers line:
 //www-data ALL = (root) NOPASSWD: /usr/bin/php /your/directory/pullupdates.php
 
