@@ -5,6 +5,7 @@
 //switch to deploy user is needed - sudo is used
 //
 //
+//
 //add to /etc/sudoers line:
 //www-data ALL = (root) NOPASSWD: /usr/bin/php /your/directory/pullupdates.php
 
