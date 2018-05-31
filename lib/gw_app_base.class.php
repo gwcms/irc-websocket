@@ -37,6 +37,7 @@ class GW_App_Base
 		$this->checkSingleInstance();
 
 		stream_set_blocking(STDIN, false);
+		register_shutdown_function([&$this, "shutdownHandler"]);
 
 		if (isset($this->params['terminate_only'])) {
 			$this->killOldInstance();
@@ -428,7 +429,7 @@ class GW_App_Base
 
 	function restartCmdEx($cmd)
 	{
-		return "screen -S ws_server $cmd";
+		return $cmd;
 	}
 
 	function restart()
@@ -473,4 +474,36 @@ class GW_App_Base
 		$this->callbacks[$event][] = $callback;
 	}	
 	
+	
+	public $error_log_file;
+	public $auto_restart_on_error = true;
+	
+	
+	function shutdownHandler() 
+	{
+		$lasterror = error_get_last();
+		$error = "unknown";
+
+		switch ($lasterror['type']) {
+			case E_ERROR:
+			case E_CORE_ERROR:
+			case E_COMPILE_ERROR:
+			case E_USER_ERROR:
+			case E_RECOVERABLE_ERROR:
+			case E_CORE_WARNING:
+			case E_COMPILE_WARNING:
+			case E_PARSE:
+				$error = "[SHUTDOWN] lvl:" . $lasterror['type'] . " | msg:" . $lasterror['message'] . " | file:" . $lasterror['file'] . " | ln:" . $lasterror['line'];
+				if ($this->error_log_file){
+					file_put_contents($this->error_log_file, "FATAL EXIT $error\n", FILE_APPEND);
+				}
+				
+				$this->fireEvent("ON_ERROR", $error);
+		}
+
+		
+		if ($this->auto_restart_on_error)
+			$this->restart();
+	}
+
 }

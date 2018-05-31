@@ -158,16 +158,28 @@ class WebSocket_App extends GW_App_Base
 	}
 	
 	
+	function testErrorReporting()
+	{
+		calllnotexistingfuncionnn();
+	}
+	
 	function init()
 	{
 		
 		$this->db = GW::db();
 
+		
+		$this->registerEvent("ON_ERROR", function($error){
+			mail(GW::s('REPORT_ERRORS'), "Websocket (host: $host) test failed", json_encode($error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) );
+		});
+		
 		if (isset($this->params['help']))
 			$this->help();
 		
 		
 
+		$this->error_log_file = GW::s('REPOS_DIR').'error_log';
+			
 		$this->timeMessage();
 		$this->versionMessage();
 
@@ -197,6 +209,10 @@ class WebSocket_App extends GW_App_Base
 		\WebSocket\Application\IRCApplication::getInstance()->init();
 
 		$this->registerInnerMethod('versionCheck', '5');
+		$this->registerInnerMethod('versionCheck', '15');
+
+		
+		
 		$cnt = 0;
 
 		while (1) {
@@ -234,4 +250,14 @@ class WebSocket_App extends GW_App_Base
 
 		parent::quit($exit);
 	}
+	
+	
+/*
+	function restartCmdEx($cmd)
+	{
+		return "screen -S ws_server $cmd";
+	}
+ * 
+ */	
 }
+

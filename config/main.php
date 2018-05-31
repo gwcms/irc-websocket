@@ -7,6 +7,8 @@ GW::s('WSS/MAX_CONNECTIONS_PER_IP', 100);
 GW::s('WSS/MAX_REQUESTS_PER_MINUTE', 2000);
 
 
+GW::s('REPOS_DIR', dirname(__DIR__).'repository/');
+
 include __DIR__.'/project.php';
 
 
