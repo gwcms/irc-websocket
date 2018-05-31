@@ -210,7 +210,7 @@ class WebSocket_App extends GW_App_Base
 		\WebSocket\Application\IRCApplication::getInstance()->init();
 
 		$this->registerInnerMethod('versionCheck', '5');
-		$this->registerInnerMethod('testErrorReporting', '30');
+		//$this->registerInnerMethod('testErrorReporting', '30');
 
 		
 		
