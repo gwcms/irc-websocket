@@ -171,7 +171,7 @@ class WebSocket_App extends GW_App_Base
 		
 		$this->registerEvent("ON_ERROR", function($error){
 			$host = GW::s('WSS/HOSTNAME');
-			mail(GW::s('REPORT_ERRORS'), "Websocket $host [error]", json_encode($error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) );
+			mail(GW::s('REPORT_ERRORS'), "Websocket $host error", json_encode($error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) );
 		});
 		
 		if (isset($this->params['help']))
