@@ -170,7 +170,8 @@ class WebSocket_App extends GW_App_Base
 
 		
 		$this->registerEvent("ON_ERROR", function($error){
-			mail(GW::s('REPORT_ERRORS'), "Websocket (host: $host) test failed", json_encode($error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) );
+			$host = GW::s('WSS/HOSTNAME');
+			mail(GW::s('REPORT_ERRORS'), "Websocket $host test failed [error]", json_encode($error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) );
 		});
 		
 		if (isset($this->params['help']))
@@ -209,7 +210,7 @@ class WebSocket_App extends GW_App_Base
 		\WebSocket\Application\IRCApplication::getInstance()->init();
 
 		$this->registerInnerMethod('versionCheck', '5');
-		//$this->registerInnerMethod('testErrorReporting', '15');
+		$this->registerInnerMethod('testErrorReporting', '30');
 
 		
 		
