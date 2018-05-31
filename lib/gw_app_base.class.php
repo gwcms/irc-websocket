@@ -498,7 +498,7 @@ class GW_App_Base
 					file_put_contents($this->error_log_file, "FATAL EXIT $error\n", FILE_APPEND);
 				}
 				
-				$this->fireEvent("ON_ERROR", $error);
+				$this->fireEvent("ON_ERROR", $lasterror);
 		}
 
 		
