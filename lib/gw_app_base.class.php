@@ -62,9 +62,9 @@ class GW_App_Base
 		//on windows OS this will not work
 		//if(OS_WIN) return;
 
-		declare(ticks = 1);
+		//declare(ticks = 1);
 
-		//pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
+		pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
 		//
 		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
 		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
