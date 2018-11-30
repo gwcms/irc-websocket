@@ -64,12 +64,12 @@ class GW_App_Base
 
 		declare(ticks = 1);
 
-		pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
+		//pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
 		//
 		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
 		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
-		pcntl_signal(SIGQUIT, array(&$this, "sigHandler"));
-		pcntl_signal(SIGTERM, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGQUIT, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGTERM, array(&$this, "sigHandler"));
 		//pcntl_signal(SIGCHLD, array(&$this, "sigHandler"));
 	}
 
@@ -489,7 +489,7 @@ class GW_App_Base
 	function shutdownHandler() 
 	{
 		$lasterror = error_get_last();
-		$error = "unknown";
+		$error = false;
 
 		switch ($lasterror['type']) {
 			case E_ERROR:
@@ -497,9 +497,9 @@ class GW_App_Base
 			case E_COMPILE_ERROR:
 			case E_USER_ERROR:
 			case E_RECOVERABLE_ERROR:
-			case E_CORE_WARNING:
-			case E_COMPILE_WARNING:
-			case E_PARSE:
+			//case E_CORE_WARNING:
+			//case E_COMPILE_WARNING:
+			//case E_PARSE:
 				$error = "[SHUTDOWN] lvl:" . $lasterror['type'] . " | msg:" . $lasterror['message'] . " | file:" . $lasterror['file'] . " | ln:" . $lasterror['line'];
 				if ($this->error_log_file){
 					file_put_contents($this->error_log_file, "FATAL EXIT $error\n", FILE_APPEND);
@@ -509,13 +509,15 @@ class GW_App_Base
 		}
 
 		
-		if (!$this->STOP_SIGNAL && $this->auto_restart_on_error){
+		if ($this->auto_restart_on_error){
 			$this->msg("AUTO RESTART ON ERROR________________________________________");
 			$this->restart();
 		}
 		
-		if($this->STOP_SIGNAL)
+		if(!$error){
+			$this->beforeQuit();
 			exit;
+		}
 	}
 
 }
