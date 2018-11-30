@@ -165,7 +165,8 @@ class GW_App_Base
 		$this->msg('SIG:' . $signo);
 
 		switch ($signo) {
-			case SIGCHLD:pcntl_waitpid(-1, $status);
+			case SIGCHLD:
+				pcntl_waitpid(-1, $status);
 				break;
 
 			case SIGWINCH:; //kai ivyksta konsoles resaizinimas
@@ -185,6 +186,7 @@ class GW_App_Base
 		
 		//in quit we should check that
 		//if ($this->STOP_SIGNAL && $this->CAN_QUIT)
+		if($this->STOP_SIGNAL)
 			$this->quit();
 	}
 
