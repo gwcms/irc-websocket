@@ -64,7 +64,7 @@ class GW_App_Base
 
 		declare(ticks = 1);
 
-		pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
+		pcntl_signal(SIGINT, array(&$this, "sigShutdown")); //ctrl+c
 		//
 		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
 		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
@@ -160,6 +160,22 @@ class GW_App_Base
 	{
 		return GW_Math_Helper::cFileSize(memory_get_usage());
 	}
+	
+	
+	function sigShutdown($signal)
+	{
+
+	
+	    echo 'Interrupted using CTRL + C';
+
+	    // you probably don't need this condition, just exit should be enough
+	    if ($signal === SIGINT)
+		    $this->quit(true);
+
+
+	
+	}
+	
 
 	function sigHandler($signo)
 	{
