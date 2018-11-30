@@ -180,7 +180,9 @@ class GW_App_Base
 			default: $this->msg("Unhandled signal: $signo");
 		}
 
-		if ($this->STOP_SIGNAL && $this->CAN_QUIT)
+		
+		//in quit we should check that
+		//if ($this->STOP_SIGNAL && $this->CAN_QUIT)
 			$this->quit();
 	}
 
