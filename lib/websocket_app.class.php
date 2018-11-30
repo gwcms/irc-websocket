@@ -240,7 +240,8 @@ class WebSocket_App extends GW_App_Base
 	{
 		echo "Bye\n";
 		
-		$this->server->close();
+		if($this->server)
+			$this->server->close();
 		sleep(1);
 	}
 
