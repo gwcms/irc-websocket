@@ -62,7 +62,7 @@ class GW_App_Base
 		//on windows OS this will not work
 		//if(OS_WIN) return;
 
-		//declare(ticks = 1);
+		declare(ticks = 1);
 
 		pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
 		//
