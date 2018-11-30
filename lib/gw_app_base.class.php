@@ -515,6 +515,7 @@ class GW_App_Base
 		}
 		
 		if(!$error){
+			$this->msg("Shutdown handler");
 			$this->beforeQuit();
 			exit;
 		}
