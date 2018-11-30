@@ -511,6 +511,9 @@ class GW_App_Base
 		
 		if (!$this->STOP_SIGNAL && $this->auto_restart_on_error)
 			$this->restart();
+		
+		if($this->STOP_SIGNAL)
+			exit;
 	}
 
 }
