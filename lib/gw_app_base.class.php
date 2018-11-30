@@ -64,12 +64,13 @@ class GW_App_Base
 
 		declare(ticks = 1);
 
-		pcntl_signal(SIGINT, array(&$this, "sigHandler"));
-		pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));
-		pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
+		pcntl_signal(SIGINT, array(&$this, "sigHandler")); //ctrl+c
+		//
+		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
+		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
 		pcntl_signal(SIGQUIT, array(&$this, "sigHandler"));
 		pcntl_signal(SIGTERM, array(&$this, "sigHandler"));
-		pcntl_signal(SIGCHLD, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGCHLD, array(&$this, "sigHandler"));
 	}
 
 	function setPidFileName()
