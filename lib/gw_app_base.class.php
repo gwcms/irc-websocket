@@ -62,9 +62,12 @@ class GW_App_Base
 		//on windows OS this will not work
 		//if(OS_WIN) return;
 
-		declare(ticks = 1);
+		
+		//https://stackoverflow.com/questions/26934216/pcntl-signal-function-not-being-hit-and-ctrlc-doesnt-work-when-using-sockets
+		////non blocking sockets neet to use
+		//declare(ticks = 1);
 
-		pcntl_signal(SIGINT, array(&$this, "sigShutdown")); //ctrl+c
+		//pcntl_signal(SIGINT, array(&$this, "sigShutdown")); //ctrl+c
 		//
 		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
 		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
