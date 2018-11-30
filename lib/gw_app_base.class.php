@@ -510,7 +510,7 @@ class GW_App_Base
 
 		
 		if ($this->auto_restart_on_error){
-			$this->msg("AUTO RESTART ON ERROR________________________________________");
+			$this->msg("AUTO RESTART ON ERROR________________________________________: ".$error);
 			$this->restart();
 		}
 		
