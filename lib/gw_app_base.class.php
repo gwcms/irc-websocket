@@ -173,7 +173,9 @@ class GW_App_Base
 			case SIGINT:;
 			case SIGQUIT:;
 			case SIGTERM:;
-			case SIGHUP: $this->STOP_SIGNAL = true;
+			case SIGHUP: 
+				$this->STOP_SIGNAL = true;
+				self::msg('STOP SIGNAL');
 				break;
 
 
