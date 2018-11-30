@@ -250,8 +250,8 @@ class WebSocket_App extends GW_App_Base
 		$this->msg('Initiating shutdown');
 		
 		
-		if($this->server)
-			$this->server->close();
+		//if($this->server)
+		//	$this->server->close();
 		
 		$this->msg('server closed. beye');
 		
