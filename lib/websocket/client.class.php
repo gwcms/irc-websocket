@@ -11,12 +11,15 @@
  * License text: https://raw.githubusercontent.com/Textalk/websocket-php/master/COPYING
  */
 
+/// todo - delayed events after joinChan, leaveChan - possible ddos if not done
+
 namespace WebSocket;
 
 class Client extends Base
 {
 
 	public $lastping = 0;
+	public $lastpingreply = 0;
 	protected $socket_uri;
 	
 	const CANT_CONNECT = 60;
@@ -49,6 +52,7 @@ class Client extends Base
 			$this->options['fragment_size'] = 4096;
 
 		$this->socket_uri = $uri;
+		$this->lastpingreply = time();
 	}
 
 	public function __destruct()
@@ -309,6 +313,8 @@ class Client extends Base
 		
 		$msgid = $this->writeData("joinchan", $data);
 		
+		$this->joined_channels[$channel]=$password;
+		
 		if($wait)
 			return $this->waitForResponse($msgid, $wait);		
 	}
@@ -345,7 +351,7 @@ class Client extends Base
 			}
 			
 			$this->fireEvent("incoming", $data);
-			$this->fireEvent("incoming_".$data['action'], $data);
+			$this->fireEvent("incoming_".$data['action'], $data);				
 		}
 	}
 	
@@ -388,9 +394,20 @@ class Client extends Base
 			$this->readToBuffer();
 
 			//every 5 minutes
-			if (time() - $this->lastping > 300)
+			if (time() - $this->lastping > 300){
 				$this->ping();
+			}
 			
+			if (time() - $this->lastpingreply > 400){
+				
+				
+				$this->msg("INT no ping reply 400seconds - do reconnect");
+				$this->msg('////////////////////////////////////// NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+				
+				$this->reconnect();
+				
+				
+			}
 		}
 	}
 	
@@ -423,7 +440,8 @@ class Client extends Base
 		
 		$this->registerEvent('incoming_joinchanReply', [$this, 'onJoinChannel']);
 		$this->registerEvent('incoming_authoriseReply', [$this, 'onAuthorise']);
-		
+		$this->registerEvent('incoming_pingReply', [$this, 'onPingReply']);
+		$this->registerEvent('connected', [$this, 'onConnected']);
 		
 		$this->initDone = true;
 		
@@ -456,7 +474,18 @@ class Client extends Base
 		{
 			$this->is_authorised = $data['user'];
 		}
-	}	
+	}
+
+	function onPingReply()
+	{
+		$this->lastpingreply = time();
+		$this->msg('INT: Ping reply!');
+	}
+	
+	function onConnected()
+	{
+		$this->lastpingreply = time();
+	}
 	
 	function messageChannel($name, $msg, $wait=false)
 	{
@@ -594,11 +623,20 @@ class Client extends Base
 		}
 	}
 	
-	
+		
 	function disconnected() 
 	{
 		$this->fireEvent('disconnected');
 		
 		parent::disconnected();
 	}
+	
+	function reconnect()
+	{
+		$this->disconnected();
+		$this->connect();
+		
+		$this->msg('RECONNEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECT');
+	}	
+	
 }
