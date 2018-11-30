@@ -509,7 +509,7 @@ class GW_App_Base
 		}
 
 		
-		if ($this->auto_restart_on_error)
+		if (!$this->STOP_SIGNAL && $this->auto_restart_on_error)
 			$this->restart();
 	}
 
