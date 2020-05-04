@@ -598,7 +598,8 @@ class IRCApplication extends Application
 		}
 		
 		
-		if($this->isClientJoinedChan($client, $chanobj) || $chanobj->allow_not_joined_msg)
+		
+		if($chanobj->allow_not_joined_msg || $this->isClientJoinedChan($client, $chanobj) )
 		{
 			//echo "chanmsg #$channame {$client->id}({$client->user->username}): $msg\n";
 			$this->sendToAll($chanobj, ['action'=>'messagechan','user'=> $client->user->username ,'channel'=>$channame,'data'=>$msg], $client->user);

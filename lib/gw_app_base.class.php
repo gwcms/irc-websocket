@@ -62,14 +62,18 @@ class GW_App_Base
 		//on windows OS this will not work
 		//if(OS_WIN) return;
 
-		declare(ticks = 1);
+		
+		//https://stackoverflow.com/questions/26934216/pcntl-signal-function-not-being-hit-and-ctrlc-doesnt-work-when-using-sockets
+		////non blocking sockets neet to use
+		//declare(ticks = 1);
 
-		pcntl_signal(SIGINT, array(&$this, "sigHandler"));
-		pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));
-		pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
-		pcntl_signal(SIGQUIT, array(&$this, "sigHandler"));
-		pcntl_signal(SIGTERM, array(&$this, "sigHandler"));
-		pcntl_signal(SIGCHLD, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGINT, array(&$this, "sigShutdown")); //ctrl+c
+		//
+		//pcntl_signal(SIGWINCH, array(&$this, "sigHandler"));//window size change
+		//pcntl_signal(SIGHUP, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGQUIT, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGTERM, array(&$this, "sigHandler"));
+		//pcntl_signal(SIGCHLD, array(&$this, "sigHandler"));
 	}
 
 	function setPidFileName()
@@ -159,13 +163,30 @@ class GW_App_Base
 	{
 		return GW_Math_Helper::cFileSize(memory_get_usage());
 	}
+	
+	
+	function sigShutdown($signal)
+	{
+
+	
+	    echo 'Interrupted using CTRL + C';
+
+	    // you probably don't need this condition, just exit should be enough
+	    if ($signal === SIGINT)
+		    $this->quit(true);
+
+
+	
+	}
+	
 
 	function sigHandler($signo)
 	{
 		$this->msg('SIG:' . $signo);
 
 		switch ($signo) {
-			case SIGCHLD:pcntl_waitpid(-1, $status);
+			case SIGCHLD:
+				pcntl_waitpid(-1, $status);
 				break;
 
 			case SIGWINCH:; //kai ivyksta konsoles resaizinimas
@@ -173,14 +194,19 @@ class GW_App_Base
 			case SIGINT:;
 			case SIGQUIT:;
 			case SIGTERM:;
-			case SIGHUP: $this->STOP_SIGNAL = true;
+			case SIGHUP: 
+				$this->STOP_SIGNAL = true;
+				self::msg('STOP SIGNAL');
 				break;
 
 
 			default: $this->msg("Unhandled signal: $signo");
 		}
 
-		if ($this->STOP_SIGNAL && $this->CAN_QUIT)
+		
+		//in quit we should check that
+		//if ($this->STOP_SIGNAL && $this->CAN_QUIT)
+		if($this->STOP_SIGNAL)
 			$this->quit();
 	}
 
@@ -482,7 +508,7 @@ class GW_App_Base
 	function shutdownHandler() 
 	{
 		$lasterror = error_get_last();
-		$error = "unknown";
+		$error = false;
 
 		switch ($lasterror['type']) {
 			case E_ERROR:
@@ -490,9 +516,9 @@ class GW_App_Base
 			case E_COMPILE_ERROR:
 			case E_USER_ERROR:
 			case E_RECOVERABLE_ERROR:
-			case E_CORE_WARNING:
-			case E_COMPILE_WARNING:
-			case E_PARSE:
+			//case E_CORE_WARNING:
+			//case E_COMPILE_WARNING:
+			//case E_PARSE:
 				$error = "[SHUTDOWN] lvl:" . $lasterror['type'] . " | msg:" . $lasterror['message'] . " | file:" . $lasterror['file'] . " | ln:" . $lasterror['line'];
 				if ($this->error_log_file){
 					file_put_contents($this->error_log_file, "FATAL EXIT $error\n", FILE_APPEND);
@@ -502,8 +528,16 @@ class GW_App_Base
 		}
 
 		
-		if ($this->auto_restart_on_error)
+		if ($error && $this->auto_restart_on_error){
+			$this->msg("AUTO RESTART ON ERROR________________________________________: ".$error);
 			$this->restart();
+		}
+		
+		if(!$error){
+			$this->msg("Shutdown handler");
+			$this->beforeQuit();
+			exit;
+		}
 	}
 
 }
