@@ -80,6 +80,7 @@ class WebSocket_App extends GW_App_Base
 	function testIrcAppConnect()
 	{
 		$this->msg("Testing connection");
+		$o = $this;
 				
 		$u1 = GW::s('TEST_USERS/U1');$p1=GW::s('TEST_USERS/P1');
 		$u2 = GW::s('TEST_USERS/U2');$p2=GW::s('TEST_USERS/P2');
@@ -96,15 +97,15 @@ class WebSocket_App extends GW_App_Base
 
 		
 
-		$c2->registerEvent('connected', function($client) use ($c2, $u1, $testphrase){
+		$c2->registerEvent('connected', function($client) use ($c2, $u1, $testphrase, $o){
 			$c2->messagePrivate($u1, $testphrase);	
 			
-			$this->msg("test sent : '$testphrase'");
+			$o->msg("test sent : '$testphrase'");
 		});	
 
-		$c1->registerEvent('incoming_messageprivate', function($data) use ($testphrase, &$testsuccess) {
+		$c1->registerEvent('incoming_messageprivate', function($data) use ($testphrase, &$testsuccess, $o) {
 			
-			$this->msg("receiveing : ".json_encode($data));
+			$o->msg("receiveing : ".json_encode($data));
 			
 			if($data['data']==$testphrase)
 				$testsuccess = true;
