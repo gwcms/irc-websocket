@@ -151,9 +151,11 @@ class WebSocket_App extends GW_App_Base
 		
 		if(!$this->testIrcAppConnect()){
 			$host = GW::s('WSS/HOSTNAME');
-			mail(GW::s('REPORT_ERRORS'), "Websocket (host: $host) test failed",'time: :'.date('y-m-d H:i:s')."\n error unknown");
+			mail(GW::s('REPORT_ERRORS'), $mailtext="Websocket (host: $host) test failed",'time: :'.date('y-m-d H:i:s')."\n error unknown");
+			$this->msg("$mailtext");
 			
 			
+			$this->msg("KILL OLD INSTANCE");
 			$this->killOldInstance();
 		}
 	}
