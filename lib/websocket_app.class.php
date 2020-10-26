@@ -94,12 +94,18 @@ class WebSocket_App extends GW_App_Base
 		$testphrase = "TESTAS".date('Ymd_His');
 		$testsuccess = false;
 
+		
 
 		$c2->registerEvent('connected', function($client) use ($c2, $u1, $testphrase){
 			$c2->messagePrivate($u1, $testphrase);	
+			
+			$this->msg("test sent : '$testphrase'");
 		});	
 
 		$c1->registerEvent('incoming_messageprivate', function($data) use ($testphrase, &$testsuccess) {
+			
+			$this->msg("receiveing : ".json_encode($data));
+			
 			if($data['data']==$testphrase)
 				$testsuccess = true;
 		});	
