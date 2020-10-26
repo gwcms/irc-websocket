@@ -257,13 +257,13 @@ class WebSocket_App extends GW_App_Base
 
 	function quit($exit = 1)
 	{
-		$this->msg('Initiating shutdown');
+		$this->msg('Quit actions');
 		
 		
 		//if($this->server)
 		//	$this->server->close();
 		
-		$this->msg('server closed. beye');
+		//$this->msg('server closed. beye');
 		
 
 		parent::quit($exit);
