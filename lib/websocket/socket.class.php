@@ -35,6 +35,7 @@ class Socket
 		$this->ssl = $ssl;
 		$this->createSocket($host, $port);
 		$this->conf = $conf;
+		
 	}
 
 	/**
@@ -45,7 +46,7 @@ class Socket
 	 */
 	private function createSocket($host, $port)
 	{
-		$protocol = ($this->ssl === true) ? 'tls://' : 'tcp://';
+		$protocol = ($this->ssl === true) ? $this->conf['ssl_options']['transport'].'://' : 'tcp://';
 		$url = $protocol . $host . ':' . $port;
 		$this->context = stream_context_create();
 		if ($this->ssl === true) {
