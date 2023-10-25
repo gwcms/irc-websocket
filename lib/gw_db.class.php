@@ -62,7 +62,12 @@ class GW_DB
 	function __construct($conf = Array())
 	{
 
-		$this->conf['logfile'] = GW::s('DIR/LOGS') . 'MySQL.log';
+		//$this->conf['logfile'] = GW::s('DIR/LOGS') . 'MySQL.log';
+		//disabled due space saving
+		$this->conf['logfile'] = false;
+		
+		
+		
 		$this->uphd = is_array(GW::$settings['DB']['UPHD']) ? GW::$settings['DB']['UPHD'] : self::parse_uphd(GW::$settings['DB']['UPHD']);
 
 		$conf = array_merge(GW::$settings['DB'], $conf);
